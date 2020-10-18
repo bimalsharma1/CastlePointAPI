@@ -1,0 +1,7 @@
+FROM mcr.microsoft.com/windows/servercore:10.0.14393.2608
+
+#RUN curl "https://download.visualstudio.microsoft.com/download/pr/14f23cb1-1e7c-4a23-b3d5-95557b908eda/08801dee6ad97c6b2904db9d7fb5e833/dotnet-sdk-2.1.700-win-x64.exe" -outfile C:\dotnet-sdk-2.1.700-win-x64.exe
+
+COPY dotnet-sdk-2.1.700-win-x64.exe "C:\\"
+
+RUN "C:\\dotnet-sdk-2.1.700-win-x64.exe" /quiet /install

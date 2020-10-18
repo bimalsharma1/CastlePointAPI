@@ -1,0 +1,2 @@
+C:\Users\gavin\source\repos\Castlepoint\Docker.Build\obj\Release\Docker.Build.csprojAssemblyReference.cache
+C:\Users\gavin\source\repos\Castlepoint\Docker.Build\obj\Release\Docker.Build.csproj.CoreCompileInputs.cache

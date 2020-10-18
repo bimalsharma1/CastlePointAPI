@@ -1,0 +1,22 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+WORKDIR /app
+EXPOSE 443
+
+# Copy all files from solution directory
+COPY Castlepoint.IdServer/Castlepoint.Idserver.csproj ./Castlepoint.IdServer/Castlepoint.Idserver.csproj
+
+# Restore the IDServer project
+RUN dotnet restore ./Castlepoint.IdServer/Castlepoint.Idserver.csproj
+
+# Copy the rest of the files
+COPY . .
+
+# Publish ID Server project
+RUN dotnet publish ./Castlepoint.IdServer/Castlepoint.Idserver.csproj -c Release -o /app/out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+WORKDIR /app
+
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "castlepoint.idserver.dll"]

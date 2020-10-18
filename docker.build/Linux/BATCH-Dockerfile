@@ -1,0 +1,21 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+WORKDIR /app
+
+# Copy all files from solution directory
+# Copy projects from solution directory
+COPY ./Castlepoint.BatchService ./Castlepoint.BatchService
+COPY ./Castlepoint.POCO ./Castlepoint.POCO
+COPY ./Castlepoint.DataFactory ./Castlepoint.DataFactory
+COPY ./Castlepoint.Utils ./Castlepoint.Utils
+
+# Restore the BATCH project, which also references DataFactory and POCO
+RUN dotnet restore Castlepoint.BatchService/*.csproj
+
+# Publish BATCH project
+RUN dotnet publish Castlepoint.BatchService/*.csproj -c Release -o /app/out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "Castlepoint.BatchService.dll"]

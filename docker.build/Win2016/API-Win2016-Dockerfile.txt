@@ -1,0 +1,22 @@
+FROM castlepoint/win2016-coresdk:latest AS build-env
+WORKDIR /app
+
+EXPOSE 443
+
+# Copy all files from solution directory
+
+COPY ./Castlepoint.API ./Castlepoint.API
+COPY ./Castlepoint.POCO ./Castlepoint.POCO
+COPY ./Castlepoint.DataFactory ./Castlepoint.DataFactory
+
+# Restore the API project, which also references DataFactory and POCO
+RUN dotnet restore "C:\app\Castlepoint.API\Castlepoint.API.csproj"
+
+# Publish API project
+RUN dotnet publish "C:\app\Castlepoint.API\Castlepoint.API.csproj" -c Release -o /app/out
+
+# Build runtime image
+FROM castlepoint/win2016-corerun:latest
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "Castlepoint.API.dll"]

@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/windows/servercore:10.0.14393.2608
+
+COPY jre-8u211-windows-i586.exe "C:\\"
+
+RUN powershell start-process -filepath C:\jre-8u211-windows-i586.exe -passthru -wait -argumentlist "/s"

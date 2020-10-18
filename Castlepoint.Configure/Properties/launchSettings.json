@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Castlepoint.Configure": {
+      "commandName": "Project",
+      "commandLineArgs": "--action=installcert --os=windows --certpath=C:\\temp\\cpconfigure-test\\cp-configure-test-nopassword.cer --certstorename=My --certstorelocation=LocalMachine"
+    }
+  }
+}

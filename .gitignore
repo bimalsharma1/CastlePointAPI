@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Castlepoint.POCO/bin/DEBUG Batch Service/netcoreapp3.1
+/Castlepoint.API/bin/DEBUG Batch Service/netcoreapp3.1

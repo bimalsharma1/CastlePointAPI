@@ -1,0 +1,19 @@
+FROM castlepoint/win2016-coresdk:latest AS build-env
+WORKDIR /app
+
+# Copy all files from solution directory
+COPY . ./
+
+RUN dir ".\Castlepoint.BatchService\*.csproj"
+
+# Restore the BATCH project, which also references DataFactory and POCO
+RUN dotnet restore "C:\app\Castlepoint.BatchService\Castlepoint.BatchService.csproj"
+
+# Publish BATCH project
+RUN dotnet publish c:\app\Castlepoint.BatchService\Castlepoint.BatchService.csproj -c Release -o out
+
+# Build runtime image
+FROM castlepoint/win2016-corerun:latest
+WORKDIR /app
+COPY --from=build-env /app/Castlepoint.BatchService/out .
+ENTRYPOINT ["dotnet", "Castlepoint.BatchService.dll"]

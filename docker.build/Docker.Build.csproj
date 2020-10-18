@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0997612B-1ECE-48C1-9758-10C9E6D9DDEA}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Docker.Build</RootNamespace>
+    <AssemblyName>Docker.Build</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TextExtract|AnyCPU'">
+    <OutputPath>bin\TextExtract\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Importer|AnyCPU'">
+    <OutputPath>bin\Importer\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TableUpdater|AnyCPU'">
+    <OutputPath>bin\TableUpdater\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Encode Record Authority|AnyCPU'">
+    <OutputPath>bin\Encode Record Authority\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Castlepoint.Configure|AnyCPU'">
+    <OutputPath>bin\Castlepoint.Configure\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Linux\.dockerignore" />
+    <None Include="Linux\API-Dockerfile" />
+    <None Include="App.config" />
+    <None Include="Linux\IMPORT-Dockerfile" />
+    <None Include="Linux\TEXT-Dockerfile" />
+    <None Include="Linux\BATCH-Dockerfile" />
+    <None Include="Linux\ID-Dockerfile" />
+    <None Include="packages\build-ubuntu-sanddance-dockerfile" />
+    <None Include="packages\build-ubuntu-npm-dockerfile" />
+    <None Include="packages\run-ubuntu-sanddance-dockerfile" />
+    <None Include="TIKA-Dockerfile" />
+    <None Include="TIKA-Dockerfile-ASPNet" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BATCH-Win2016-Dockerfile.txt" />
+    <Content Include="DotNetCoreRuntime-Win2016-Dockerfile.txt" />
+    <Content Include="DotNetCoreSDK-Win2016-Dockerfile.txt" />
+    <Content Include="Java-Dockerfile-wincore.txt" />
+    <Content Include="JRE-win2016-Dockerfile.txt" />
+    <Content Include="Linux\Tesseract-OCR-Dockerfile.txt" />
+    <Content Include="Win2019\JRE-win2019-Dockerfile.txt" />
+    <Content Include="Win2019\Stanford-Win2019-Dockerfile.txt" />
+    <Content Include="Win2019\TEXT-Win2019-Dockerfile.txt" />
+    <Content Include="Win2019\ID-Win2019-Dockerfile.txt" />
+    <Content Include="Win2019\API-Win2019-Dockerfile.txt" />
+    <Content Include="Win2019\BATCH-Win2019-Dockerfile.txt" />
+    <Content Include="Win2019\DotNetCoreRuntime-Win2019-Dockerfile.txt" />
+    <Content Include="Win2019\DotNetCoreSDK-Win2019-Dockerfile.txt" />
+    <Content Include="Win2019\MONGO-Win2019-Dockerfile.txt" />
+    <Content Include="Win2019\NGINX-Win2019-Dockerfile.txt" />
+    <Content Include="Win2019\Tika-Win2019-Dockerfile.txt" />
+    <None Include="Linux\TIKA-NoTesseract" />
+    <None Include="Linux\OpenSSL-Dockerfile" />
+    <Content Include="Stanford-Win2016-Dockerfile.txt" />
+    <Content Include="Linux\TIKA-Dockerfile-Linux.txt" />
+    <Content Include="Tika-Win2016-Dockerfile.txt" />
+    <Content Include="Win2016\BATCH-Win2016-Dockerfile.txt" />
+    <Content Include="Win2016\DotNetCoreSDK-Win2016-Dockerfile.txt" />
+    <Content Include="Win2016\JRE-win2016-Dockerfile.txt" />
+    <Content Include="Win2016\Stanford-Win2016-Dockerfile.txt" />
+    <Content Include="Win2016\Tika-Win2016-Dockerfile.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

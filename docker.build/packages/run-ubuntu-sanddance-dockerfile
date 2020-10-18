@@ -1,0 +1,31 @@
+FROM castlepoint/sanddance.build:latest as build-env
+WORKDIR /build/Sanddance
+
+LABEL maintainer="gavinm@castlepoint.systems"
+LABEL description="Sandance run environment"
+LABEL website=www.castlepoint.systems
+
+# Reference: https://github.com/microsoft/SandDance/blob/master/dev.md
+
+# Install dependencies for Jekyll
+#RUN apt-get install ruby-full build-essential zlib1g-dev -y
+
+# Install Jekyll
+#RUN gem install jekyll bundler
+
+# deployment
+#RUN npm run deploy
+
+# Run
+FROM jekyll/jekyll:latest
+WORKDIR /build/Sanddance/docs
+COPY --from=build-env /build/Sanddance/docs .
+
+# Create Jekyll folders for build
+RUN mkdir .jekyll-cache
+RUN mkdir _site
+
+RUN jekyll build
+
+EXPOSE 4000
+ENTRYPOINT ["jekyll", "serve", "--host", "0.0.0.0"]

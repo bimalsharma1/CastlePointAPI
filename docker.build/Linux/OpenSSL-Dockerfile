@@ -1,0 +1,11 @@
+FROM alpine
+
+LABEL maintainer="gavinm@castlepoint.systems"
+LABEL description="OpenSSL on Alpine"
+LABEL website=www.castlepoint.systems
+
+RUN apk update && \
+  apk add --no-cache openssl && \
+  rm -rf /var/cache/apk/*
+
+ENTRYPOINT ["openssl"]

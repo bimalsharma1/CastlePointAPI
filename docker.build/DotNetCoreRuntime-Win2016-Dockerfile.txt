@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/windows/servercore:10.0.14393.2608
+
+COPY dotnet-runtime-2.1.11-win-x64.exe "C:\\"
+
+RUN "C:\\dotnet-runtime-2.1.11-win-x64.exe" /quiet /install

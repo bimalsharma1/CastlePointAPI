@@ -1,0 +1,17 @@
+FROM castlepoint/npm:latest
+WORKDIR /build/Sanddance
+
+LABEL maintainer="gavinm@castlepoint.systems"
+LABEL description="Sandance build environment"
+LABEL website=www.castlepoint.systems
+
+# Get latest copy of Sanddance from github
+RUN git clone https://github.com/microsoft/SandDance.git /build/Sanddance
+
+# Install packages
+RUN npm install
+
+# Build packages
+RUN npm run build
+
+ENTRYPOINT ["/bin/bash"]

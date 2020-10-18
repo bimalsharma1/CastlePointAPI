@@ -1,0 +1,31 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+WORKDIR /app
+
+# Copy projects from solution directory
+COPY ./Castlepoint.BatchService ./Castlepoint.BatchService
+COPY ./Castlepoint.POCO ./Castlepoint.POCO
+COPY ./Castlepoint.DataFactory ./Castlepoint.DataFactory
+COPY ./Castlepoint.Utils ./Castlepoint.Utils
+
+RUN dir ".\Castlepoint.BatchService\*.csproj"
+
+# Restore the BATCH project, which also references DataFactory and POCO
+RUN dotnet restore "C:\app\Castlepoint.BatchService\Castlepoint.BatchService.csproj"
+
+# Publish BATCH project
+RUN dotnet publish c:\app\Castlepoint.BatchService\Castlepoint.BatchService.csproj -c Release -o /app/out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1
+WORKDIR /app
+
+## Install Powershell Core
+#Download the package we want and unzip it to our destination
+#curl.exe -o pwsh6.zip "https://github.com/powershell/powershell/releases/download/v6.2.3/powershell-6.2.3-win-x64.zip" && \
+COPY PowerShell-6.2.3-win-x64.zip .
+RUN mkdir "C:\\Program Files\\PowerShell\\6.0.0" && \
+  tar.exe -xf PowerShell-6.2.3-win-x64.zip -C "C:\\Program Files\\PowerShell\\6.0.0"
+
+COPY --from=build-env /app/out .
+
+ENTRYPOINT ["dotnet", "Castlepoint.BatchService.dll"]

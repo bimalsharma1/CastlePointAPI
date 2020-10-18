@@ -1,0 +1,19 @@
+FROM ubuntu:latest
+WORKDIR /build
+
+LABEL maintainer="gavinm@castlepoint.systems"
+LABEL description="Package build environment"
+LABEL website=www.castlepoint.systems
+
+# Install git
+RUN apt-get update && \
+  apt install git -y
+
+# Install timzone
+RUN DEBIAN_FRONTEND="noninteractive" TZ="Australia" apt-get -y install tzdata
+
+# Install NPM
+RUN apt install npm -y
+
+
+

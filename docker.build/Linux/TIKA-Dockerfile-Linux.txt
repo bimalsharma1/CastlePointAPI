@@ -1,0 +1,5 @@
+FROM logicalspark/docker-tikaserver:latest
+
+EXPOSE 9998
+
+ENTRYPOINT java -jar /tika-server-1.21.jar -spawnChild -JXmx4g -h 0.0.0.0

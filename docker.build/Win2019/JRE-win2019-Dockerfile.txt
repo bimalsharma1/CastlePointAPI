@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+
+COPY jre-8u231-windows-x64.exe "C:\\"
+
+RUN powershell start-process -filepath C:\jre-8u231-windows-x64.exe -passthru -wait -argumentlist "/s"

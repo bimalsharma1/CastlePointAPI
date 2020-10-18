@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/windows/servercore:1607
+
+COPY dotnet-sdk-3.1.200-win-x86.exe "C:\\"
+
+RUN "C:\\dotnet-sdk-3.1.200-win-x86.exe" /quiet /install

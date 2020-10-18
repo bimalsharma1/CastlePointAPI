@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Configurations>Debug;Release;Batch Service;Castlepoint services;ID Server;DEBUG Batch Service;TextExtract;Importer;TableUpdater;Encode Record Authority;Castlepoint.Configure</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AsyncEnumerator" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.7" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.5" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Castlepoint.POCO\Castlepoint.POCO.csproj" />
+    <ProjectReference Include="..\Castlepoint.Utils\Castlepoint.Utilities.csproj" />
+  </ItemGroup>
+
+</Project>

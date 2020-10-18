@@ -1,0 +1,32 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+WORKDIR /app
+
+EXPOSE 443
+
+# Copy the project files from solution directory
+COPY Castlepoint.IdServer/Castlepoint.IdServer.csproj ./Castlepoint.IdServer/Castlepoint.IdServer.csproj
+
+# Restore the IdServer project
+RUN dotnet restore "C:\app\Castlepoint.IdServer\Castlepoint.IdServer.csproj"
+
+# Copy everything else and build
+COPY . .
+
+# Publish IdServer project
+USER ContainerAdministrator 
+RUN dotnet publish "Castlepoint.IdServer/Castlepoint.IdServer.csproj" -c Release -o /app/out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+WORKDIR /app
+COPY --from=build-env /app/out .
+
+## Install Powershell Core
+
+#Download the package we want and unzip it to our destination
+#curl.exe -o pwsh6.zip "https://github.com/powershell/powershell/releases/download/v6.2.3/powershell-6.2.3-win-x64.zip" && \
+COPY PowerShell-6.2.3-win-x64.zip .
+RUN mkdir "C:\\Program Files\\PowerShell\\6.0.0" && \
+  tar.exe -xf PowerShell-6.2.3-win-x64.zip -C "C:\\Program Files\\PowerShell\\6.0.0"
+
+ENTRYPOINT ["dotnet", "Castlepoint.IdServer.dll"]

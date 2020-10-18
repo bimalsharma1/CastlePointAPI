@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\bimal\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\bimal\\.nuget\\packages"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+WORKDIR /app
+EXPOSE 443
+
+# Copy the Configure project from solution directory
+COPY Castlepoint.Configure/Castlepoint.Configure.csproj ./Castlepoint.Configure/Castlepoint.Configure.csproj
+
+# Restore the Configure project
+RUN dotnet restore ./Castlepoint.Configure/Castlepoint.Configure.csproj
+
+# Copy the rest of the files
+COPY . .
+
+# Publish Configure project
+RUN dotnet publish Castlepoint.Configure/Castlepoint.Configure.csproj -c Release -o /app/configure
+
+# Copy the project files from solution directory
+COPY Castlepoint.API/Castlepoint.API.csproj ./Castlepoint.API/Castlepoint.API.csproj
+COPY Castlepoint.POCO/Castlepoint.POCO.csproj ./Castlepoint.POCO/Castlepoint.POCO.csproj
+COPY Castlepoint.DataFactory/Castlepoint.DataFactory.csproj ./Castlepoint.DataFactory/Castlepoint.DataFactory.csproj
+COPY Castlepoint.Utils/Castlepoint.Utilities.csproj ./Castlepoint.Utils/Castlepoint.Utilities.csproj
+
+# Restore the API project, which also references DataFactory and POCO
+RUN dotnet restore ./Castlepoint.API/Castlepoint.API.csproj
+
+# Copy the rest of the files
+COPY . .
+
+# Publish API project
+RUN dotnet publish ./Castlepoint.API/Castlepoint.API.csproj -c Release -o /app/out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+WORKDIR /app
+COPY --from=build-env /app/out .
+COPY --from=build-env /app/configure /configure
+ENTRYPOINT ["dotnet", "Castlepoint.API.dll"]

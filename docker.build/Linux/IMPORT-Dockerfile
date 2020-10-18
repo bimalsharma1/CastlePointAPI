@@ -1,0 +1,19 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+WORKDIR /app
+
+# Copy projects from solution directory
+COPY ./Castlepoint.Importer ./Castlepoint.Importer
+COPY ./Castlepoint.Integration ./Castlepoint.Integration
+COPY ./Castlepoint.POCO ./Castlepoint.POCO
+COPY ./Castlepoint.Utils ./Castlepoint.Utils
+
+# Restore the BATCH project, which also references DataFactory and POCO
+RUN dotnet restore Castlepoint.Importer/*.csproj
+
+# Publish BATCH project
+RUN dotnet publish Castlepoint.Importer/*.csproj -c Release -o /app/out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1
+WORKDIR /app
+COPY --from=build-env /app/out .

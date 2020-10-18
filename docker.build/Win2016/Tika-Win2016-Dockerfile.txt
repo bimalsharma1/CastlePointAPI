@@ -1,0 +1,9 @@
+FROM castlepoint/win2016-jre:latest
+
+ENV TIKA_VERSION 1.21
+
+COPY tika-server-1.21.jar "C:\\Tika\\"
+
+EXPOSE 9998
+
+ENTRYPOINT java -jar /Tika/tika-server-1.21.jar -h 0.0.0.0

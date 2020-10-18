@@ -1,0 +1,20 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+WORKDIR /app
+EXPOSE 8398
+
+# Copy all files from solution directory
+COPY . .
+COPY Castlepoint.Text/Castlepoint.Text.csproj ./Castlepoint.Text/Castlepoint.Text.csproj
+COPY Castlepoint.POCO/Castlepoint.POCO.csproj ./Castlepoint.POCO/Castlepoint.POCO.csproj
+
+# Restore the Text project, which also references POCO
+RUN dotnet restore ./Castlepoint.Text/Castlepoint.Text.csproj
+
+# Publish Text project
+RUN dotnet publish ./Castlepoint.Text/Castlepoint.Text.csproj -c Release -o /app/out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "Castlepoint.Text.dll"]
