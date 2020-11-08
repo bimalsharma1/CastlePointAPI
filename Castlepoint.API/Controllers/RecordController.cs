@@ -2,24 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Web;
 
   // Namespace for CloudConfigurationManager
 using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.File;
-using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
-
 using Newtonsoft.Json;
-
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.FileProviders;
-using System.IO;
 
 namespace Castlepoint.REST.Controllers
 {
@@ -74,6 +65,68 @@ namespace Castlepoint.REST.Controllers
 
                 } while (token != null && (query.TakeCount == null || recordEntities.Count < query.TakeCount.Value));    //!ct.IsCancellationRequested &&
 
+
+                recordEntities.Sort((x, y) => String.Compare(x.Label, y.Label));
+
+                entityAsJson = JsonConvert.SerializeObject(recordEntities, Formatting.Indented);
+
+            }
+            catch (Exception ex)
+            {
+                string exceptionMsg = "Record GET exception: " + ex.Message;
+                //log.Info("Exception occurred extracting text from uploaded file \r\nError: " + ex.Message);
+                if (ex.InnerException != null)
+                {
+                    exceptionMsg = exceptionMsg + "[" + ex.InnerException.Message + "]";
+                }
+
+                _logger.LogError(exceptionMsg);
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError);
+            }
+
+            ObjectResult result = new ObjectResult(entityAsJson);
+            return result;
+        }
+
+        // POST: record filtered by date
+        [HttpPost("filterbydate", Name = "GetRecordsByDate")]
+        public IActionResult GetRecordsByDate([FromBody] RecordDateFilter dateFilter)
+        {
+            string entityAsJson = "";
+            try
+            {
+
+                _logger.LogInformation("CPAPI: Get");
+
+                // Create the table if it doesn't exist. 
+                //log.Info("Getting table reference");
+                CloudTable table = Utils.GetCloudTable("stlprecords", _logger);
+
+                // Create a default query
+                TableQuery<RecordEntity> query = new TableQuery<RecordEntity>();
+
+                List<RecordEntity> recordEntities = new List<RecordEntity>();
+                TableContinuationToken token = null;
+
+                var runningQuery = new TableQuery<RecordEntity>()
+                {
+                    FilterString = query.FilterString,
+                    SelectColumns = query.SelectColumns
+                };
+
+                do
+                {
+                    runningQuery.TakeCount = query.TakeCount - recordEntities.Count;
+
+                    Task<TableQuerySegment<RecordEntity>> tSeg = table.ExecuteQuerySegmentedAsync<RecordEntity>(runningQuery, token);
+                    tSeg.Wait();
+                    token = tSeg.Result.ContinuationToken;
+                    recordEntities.AddRange(tSeg.Result);
+
+                } while (token != null && (query.TakeCount == null || recordEntities.Count < query.TakeCount.Value));    //!ct.IsCancellationRequested &&
+
+                recordEntities = recordEntities
+                    .Where(x => (x.LastUpdated != null && x.Created >= dateFilter.dateFilter) || (x.LastUpdated != null && x.LastUpdated >= dateFilter.dateFilter)).ToList();
 
                 recordEntities.Sort((x, y) => String.Compare(x.Label, y.Label));
 
@@ -1299,6 +1352,11 @@ namespace Castlepoint.REST.Controllers
         {
             public string systemuri;
             public string recorduri;
+        }
+
+        public class RecordDateFilter
+        {
+            public DateTime dateFilter;
         }
 
         [HttpPost("forcechangeflag", Name = "ForceChangeFlag")]
